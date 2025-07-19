@@ -1,0 +1,23 @@
+services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis_prod
+    restart: unless-stopped
+    command: >
+      redis-server --requirepass redisProdPassword225R
+                  --maxmemory 256mb
+                  --maxmemory-policy allkeys-lru
+                  --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - infra_network
+
+volumes:
+  redis_data:
+
+networks:
+  infra_network:
+    external: true

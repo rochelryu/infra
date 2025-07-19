@@ -1,0 +1,51 @@
+services:
+  kafka:
+    image: bitnami/kafka:3.7
+    container_name: kafka_prod
+    restart: unless-stopped
+    environment:
+      # Configuration de KRaft (mode sans Zookeeper)
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: "controller,broker"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka_prod:9093"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+
+      # Listeners
+      KAFKA_CFG_LISTENERS: "CONTROLLER://:9093,EXTERNAL://:9092"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "EXTERNAL://62.171.178.129:9092"
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "EXTERNAL"
+
+      # Auto-create topics
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+      # Logging & performance tuning
+      KAFKA_CFG_LOG_RETENTION_HOURS: 72
+      KAFKA_CFG_NUM_PARTITIONS: 3
+      KAFKA_CFG_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_CFG_DELETE_TOPIC_ENABLE: "true"
+
+      # Monitoring (exploitable avec Prometheus)
+      KAFKA_JMX_PORT: 9999
+      JMX_PORT: 9999
+      KAFKA_JMX_HOSTNAME: 62.171.178.129
+
+      # Bitnami: autorise PLAINTEXT
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+
+    ports:
+      - "9092:9092"    # Kafka externe
+      - "9093:9093"    # Controller
+      - "9999:9999"    # JMX monitoring
+    volumes:
+      - kafka_data:/bitnami/kafka
+    networks:
+      - infra_network
+
+volumes:
+  kafka_data:
+
+networks:
+  infra_network:
+    name: infra_network
+    driver: bridge
