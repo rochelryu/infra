@@ -28,7 +28,7 @@ services:
       # Monitoring (exploitable avec Prometheus)
       KAFKA_JMX_PORT: 9999
       JMX_PORT: 9999
-      KAFKA_JMX_HOSTNAME: 62.171.178.129
+      KAFKA_JMX_HOSTNAME: <<IP_SERVER>>
 
       # Bitnami: autorise PLAINTEXT
       ALLOW_PLAINTEXT_LISTENER: "yes"
