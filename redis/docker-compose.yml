@@ -4,7 +4,7 @@ services:
     container_name: redis_prod
     restart: unless-stopped
     command: >
-      redis-server --requirepass redisProdPassword225R
+      redis-server --requirepass <<YOUR_PASSWORD>>
                   --maxmemory 256mb
                   --maxmemory-policy allkeys-lru
                   --appendonly yes
